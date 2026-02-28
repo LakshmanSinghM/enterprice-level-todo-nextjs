@@ -53,7 +53,7 @@ export const apiCall = async <T>(
     const requestOptions: RequestInit = {
         method,
         headers: { ...defaultHeaders, ...headers },
-        credentials: "include",
+        ...(skipAuth ? {} : { credentials: "include" }),
         body: body ? JSON.stringify(body) : undefined,
         signal,
     }
@@ -85,6 +85,8 @@ export const apiCall = async <T>(
 
     } catch (error: any) {
         // Retry on network failure
+        console.log("The error is like in apiClient " + JSON.stringify(error));
+
         if (retries > 0 && error.name !== "AbortError") {
             return apiCall<T>(path, {
                 method,
@@ -99,8 +101,7 @@ export const apiCall = async <T>(
         if (error.name === "AbortError") {
             throw new Error("Request timed out")
         }
-
-        throw normalizeError(error)
+        throw normalizeApiError(error, error?.status)
     }
 }
 
@@ -110,21 +111,7 @@ const handleResponse = async <T>(response: Response): Promise<APIResponse<T>> =>
 
     if (!response.ok) {
         const errorBody = await safeJson(response)
-
-        switch (response.status) {
-            case 400:
-                throw errorBody
-            case 403:
-                throw new Error("Forbidden")
-            case 404:
-                throw new Error("Resource not found")
-            case 429:
-                throw new Error("Too many requests")
-            case 500:
-                throw new Error("Internal server error")
-            default:
-                throw new Error(errorBody?.message || "Something went wrong")
-        }
+        throw normalizeApiError(errorBody, response.status)
     }
 
     if (response.status === 204) {
@@ -134,7 +121,6 @@ const handleResponse = async <T>(response: Response): Promise<APIResponse<T>> =>
             data: undefined as unknown as T,
         }
     }
-
     return (await response.json()) as APIResponse<T>
 }
 
@@ -149,4 +135,12 @@ const safeJson = async (response: Response) => {
 const normalizeError = (error: any) => {
     if (error instanceof Error) return error
     return new Error(error?.message || "Unexpected error occurred")
+}
+
+const normalizeApiError = (errorBody: any, status: number): any => {
+    return {
+        status,
+        message: errorBody?.message || errorBody?.error || "Something went wrong",
+        errors: errorBody?.errors || null,
+    }
 }

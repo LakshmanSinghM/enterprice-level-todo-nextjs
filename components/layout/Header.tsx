@@ -16,7 +16,7 @@ const Header = () => {
 
     return (
         <div className="flex justify-between items-center p-4 border-b">
-            {/* <h1 className="text-xl font-bold">PrioTask</h1>
+            <h1 className="text-xl font-bold">PrioTask</h1>
             <Button
                 variant="outline"
                 size="icon"
@@ -32,7 +32,7 @@ const Header = () => {
                 ) : (
                     <Moon className="h-5 w-5" />
                 )}
-            </Button> */}
+            </Button>
         </div>
     )
 }

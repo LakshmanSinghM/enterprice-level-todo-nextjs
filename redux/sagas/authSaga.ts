@@ -4,23 +4,32 @@ import { registerFailure, registerRequest, registerSuccess } from "../slices/aut
 import { authApi } from "../apis/authApi";
 import { UserAuthReponse, UserAuthSuccessResponsePaylod } from "@/types/userAndAuthTypes";
 import { FailureResponsePaylod } from "@/types/baseTypes";
+import { setRefreshToken, setToken } from "@/utils/storage/storageHelper";
 
 
 function* handleRegister(action: ReturnType<typeof registerRequest>) {
 
     try {
+
         const response: APIResponse<UserAuthReponse> = yield call(authApi.registerUser, action.payload.user);
         const payload: UserAuthSuccessResponsePaylod = {
             data: response.data,
             message: response.message,
             meta: action.payload.reqMeta,
         }
+
+        if (response?.data?.accessToken)
+            setToken(response?.data?.accessToken)
+        if (response?.data?.refreshToken)
+            setRefreshToken(response.data.refreshToken)
+
         yield put(registerSuccess(payload));
     } catch (error: any) {
 
         const errorPayload: FailureResponsePaylod = {
-            message: (error as Error).message ?? "Register failed",
-            errors: error,
+            status: error?.status,
+            message: error?.message ?? "Register failed",
+            errors: error?.errors,
             meta: action.payload.reqMeta
         }
         yield put(registerFailure(errorPayload));

@@ -58,4 +58,5 @@ export type FailureResponsePaylod = {
     meta?: Record<string, string>;
     message?: string;
     errors?: Record<string, any>;
+    status?: number;
 }

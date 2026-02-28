@@ -18,6 +18,7 @@ const initialState: AuthState = {
     authError: null,
     authMessage: null,
     reqMeta: undefined,
+    errors: undefined,
 };
 
 const authSlice = createSlice({
@@ -32,12 +33,15 @@ const authSlice = createSlice({
         },
 
         registerRequest(state, action: PayloadAction<UserAuthRequestPayload>) {
+            console.log("COming time ");
             state.authLoading = true;
             state.authError = null;
             state.reqMeta = action.payload.reqMeta;
+            state.errors = undefined;
         },
 
         registerSuccess(state, action: PayloadAction<UserAuthSuccessResponsePaylod>) {
+            console.log("Succes are coming in slice " + JSON.stringify(action.payload))
             state.authLoading = false;
             state.user = action.payload.data?.user;
             state.authMessage = action.payload.message ?? null;
@@ -45,11 +49,11 @@ const authSlice = createSlice({
         },
 
         registerFailure(state, action: PayloadAction<FailureResponsePaylod>) {
+            console.log("Errors are coming in slice " + JSON.stringify(action.payload))
             state.authLoading = false;
             state.authError = action.payload.message ?? null;
             state.reqMeta = action.payload.meta;
             state.errors = action.payload.errors
-
         },
 
         // logoutRequest(state, action: PayloadAction<{ meta?: Record<string, string> }>) {

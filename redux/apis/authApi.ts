@@ -8,8 +8,8 @@ export const authApi = {
             "/api/v1/auth/register",
             {
                 method: "POST",
-                body: authRequest
-
+                body: authRequest,
+                skipAuth: true,
             }
         );
     },

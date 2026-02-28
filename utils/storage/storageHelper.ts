@@ -56,6 +56,8 @@ export const setToken = (token: string) => {
 };
 
 export const getToken = () => {
+    console.log("Token from cookies " + getCookieByKey("authToken"));
+    console.log("Token from storage  " + getLocalStorageItem("authToken"));
     const token = getCookieByKey("authToken") || getLocalStorageItem("authToken");
     return token;
 };
