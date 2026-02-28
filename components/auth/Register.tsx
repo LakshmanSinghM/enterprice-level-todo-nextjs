@@ -27,6 +27,9 @@ import { useToast } from "@/hooks/useToast"
 import { useRouter } from "next/navigation"
 import { FcGoogle } from "react-icons/fc"
 import { googleLogin } from "./google-login"
+import { useAppDispatch } from "@/redux/hooks"
+import { registerRequest } from "@/redux/slices/authSlice"
+import { UserAuthRequestPayload } from "@/types/userAndAuthTypes"
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email."),
@@ -39,6 +42,7 @@ const formSchema = z.object({
 
 export function RegisterForm() {
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -50,8 +54,18 @@ export function RegisterForm() {
     })
 
     function onSubmit(data: z.infer<typeof formSchema>) {
-        useToast("Registation successful", { type: "success", position: "bottom-right" });
-        form.reset()
+        const payload: UserAuthRequestPayload = {
+            user: {
+                email: data.email,
+                password: data.password,
+            },
+            reqMeta: {
+                resiter: "registerRequest"
+            }
+        }
+        dispatch(registerRequest(payload));
+        // useToast("Registation successful", { type: "success", position: "bottom-right" });
+        // form.reset()
     }
 
     function handleGoogleLogin() {
