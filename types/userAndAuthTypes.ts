@@ -15,8 +15,16 @@ export type SimpleAuthRequest = {
     password: string;
 }
 
+export type GoogleAuthRequest = {
+    code: string;
+}
+
 export type UserAuthRequestPayload = {
     user: SimpleAuthRequest;
+    reqMeta?: Record<string, string>;
+}
+
+export type UserGoogleAuthRequestPayload = GoogleAuthRequest & {
     reqMeta?: Record<string, string>;
 }
 

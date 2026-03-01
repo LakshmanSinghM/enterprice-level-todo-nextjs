@@ -2,6 +2,7 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 const NEXT_APP_GOOGLE_AUTH_REDIRECT_URL = process.env.NEXT_PUBLIC_NEXT_APP_GOOGLE_AUTH_REDIRECT_URL
 
 export const googleLogin = (router: any) => {
+
     if (!GOOGLE_CLIENT_ID || !NEXT_APP_GOOGLE_AUTH_REDIRECT_URL) {
         console.log("The google auth credentials are missing from the env");
         return;

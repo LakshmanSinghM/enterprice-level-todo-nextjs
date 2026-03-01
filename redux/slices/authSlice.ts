@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User, UserAuthRequestPayload, UserAuthSuccessResponsePaylod } from "@/types/userAndAuthTypes";
+import { User, UserAuthRequestPayload, UserAuthSuccessResponsePaylod, UserGoogleAuthRequestPayload } from "@/types/userAndAuthTypes";
 import { FailureResponsePaylod } from "@/types/baseTypes";
 
 
@@ -10,6 +10,7 @@ interface AuthState {
     authMessage: string | null;
     reqMeta?: Record<string, string>;
     errors?: Record<string, string>;
+    loggedIn?: boolean;
 }
 
 const initialState: AuthState = {
@@ -19,6 +20,7 @@ const initialState: AuthState = {
     authMessage: null,
     reqMeta: undefined,
     errors: undefined,
+    loggedIn: false,
 };
 
 const authSlice = createSlice({
@@ -40,12 +42,20 @@ const authSlice = createSlice({
             state.errors = undefined;
         },
 
+        googleAuthRequest(state, action: PayloadAction<UserGoogleAuthRequestPayload>) {
+            state.authLoading = true;
+            state.authError = null;
+            state.reqMeta = action.payload.reqMeta;
+            state.errors = undefined;
+        },
+
         registerSuccess(state, action: PayloadAction<UserAuthSuccessResponsePaylod>) {
             console.log("Succes are coming in slice " + JSON.stringify(action.payload))
             state.authLoading = false;
             state.user = action.payload.data?.user;
             state.authMessage = action.payload.message ?? null;
             state.reqMeta = action.payload.meta;
+            state.loggedIn = true;
         },
 
         registerFailure(state, action: PayloadAction<FailureResponsePaylod>) {
@@ -86,6 +96,7 @@ export const {
     registerRequest,
     registerSuccess,
     registerFailure,
+    googleAuthRequest,
     // logoutRequest,
     // logoutSuccess,
     // logoutFailure,
