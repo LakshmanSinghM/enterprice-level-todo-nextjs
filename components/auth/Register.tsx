@@ -26,10 +26,12 @@ import {
 import { useToast } from "@/hooks/useToast"
 import { useRouter } from "next/navigation"
 import { FcGoogle } from "react-icons/fc"
-import { googleLogin } from "./google-login"
+import { googleLogin as redirectGoogleLogin } from "./google-login"
 import { useAppDispatch } from "@/redux/hooks"
 import { registerRequest } from "@/redux/slices/authSlice"
 import { UserAuthRequestPayload } from "@/types/userAndAuthTypes"
+import { useAuth } from "@/hooks/useAuth"
+import { useEffect } from "react"
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email."),
@@ -43,6 +45,7 @@ const formSchema = z.object({
 export function RegisterForm() {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const { authLoading, authError, errors, authMessage, loggedIn, register } = useAuth();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -63,17 +66,23 @@ export function RegisterForm() {
                 resiter: "registerRequest"
             }
         }
-        dispatch(registerRequest(payload));
+        register(payload);
         // useToast("Registation successful", { type: "success", position: "bottom-right" });
         // form.reset()
     }
 
+    useEffect(() => {
+        if (authError) {
+            useToast(authError, { type: "error" })
+        }
+    }, [authError])
+
     function handleGoogleLogin() {
-        googleLogin(router);
+        redirectGoogleLogin(router);
     }
 
     return (
-        <Card className="w-full sm:max-w-md dark:bg-gray-900 shadow-none! border-none!">
+        <Card className="w-full sm:max-w-md  shadow-none! border-none!">
             <CardHeader>
                 <CardTitle>Create Account</CardTitle>
                 <CardDescription>

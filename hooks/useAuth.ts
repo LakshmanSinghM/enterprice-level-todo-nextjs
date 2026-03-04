@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react" 
+import { useEffect } from "react"
 import { useAppDispatch } from "@/redux/hooks"
 import { useAuthSelector } from "@/hooks/sliceGeneralHooks"
 import { useToast } from "@/hooks/useToast"
@@ -16,9 +16,9 @@ import {
     UserGoogleAuthRequestPayload,
 } from "@/types/userAndAuthTypes"
 
-export function useAuth() { 
+export function useAuth() {
     const dispatch = useAppDispatch()
-    const { authLoading, authError, authMessage, loggedIn, reqMeta, errors, } = useAuthSelector()
+    const { authLoading, authError, authMessage, loggedIn, reqMeta, errors, user } = useAuthSelector()
 
     //  REGISTER 
     const register = (payload: UserAuthRequestPayload) => {
@@ -37,7 +37,7 @@ export function useAuth() {
             dispatch(resetAuthMessageError())
         }
         if (authError) {
-            useToast(authError, { type: "error" })
+            // useToast(authError, { type: "error" })
             dispatch(resetAuthMessageError())
         }
     }, [authError, authMessage])
@@ -47,8 +47,10 @@ export function useAuth() {
         authLoading,
         authError,
         errors,
+        authMessage,
         loggedIn,
-        
+        user,
+
         // actions
         register,
         googleLogin,

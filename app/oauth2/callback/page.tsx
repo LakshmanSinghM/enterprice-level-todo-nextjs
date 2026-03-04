@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
@@ -15,11 +15,12 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
- 
+
 function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { authLoading, authError, loggedIn, googleLogin } = useAuth();
+  const [errorReady, setErrorReady] = useState<boolean>(false);
 
   useEffect(() => {
     const code = searchParams.get("code");
@@ -39,11 +40,17 @@ function CallbackContent() {
     if (!loggedIn) return;
 
     const timer = setTimeout(() => {
-      router.replace("/");
+      router.replace("/user"); 
     }, 1200);
 
     return () => clearTimeout(timer);
   }, [loggedIn, router]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorReady(true);
+    }, 1000)
+  }, [])
 
   return (
     <div className="flex min-h-screen items-center justify-center dark:bg-gray-900 px-4">
@@ -81,7 +88,7 @@ function CallbackContent() {
             </>
           )}
 
-          {!authLoading && !loggedIn && (
+          {!authLoading && !loggedIn && errorReady && (
             <>
               <XCircle className="h-10 w-10 text-red-500" />
               <p className="text-sm font-medium text-red-600">
@@ -104,7 +111,7 @@ function CallbackContent() {
     </div>
   );
 }
- 
+
 export default function Page() {
   return (
     <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
