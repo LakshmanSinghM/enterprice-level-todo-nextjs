@@ -8,6 +8,7 @@ export interface User extends TimeStamp, StatusAndDelete {
     providerId: string | null
     firstName: string | null
     lastName: string | null
+    profileImage: string | null
 }
 
 export type SimpleAuthRequest = {
@@ -27,7 +28,6 @@ export type UserAuthRequestPayload = {
 export type UserGoogleAuthRequestPayload = GoogleAuthRequest & {
     reqMeta?: Record<string, string>;
 }
-
 
 
 export type UserAuthSuccessResponsePaylod = SuccessResponsePaylod<UserAuthReponse>;

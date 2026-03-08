@@ -1,3 +1,6 @@
+import { useRouter } from "next/navigation";
+import { clearAllTypesOfStorage } from "../storage/storageHelper";
+
 export const getFirstLetterOfName = (
     firstName: string | null = "",
     lastName: string | null = ""
@@ -9,3 +12,9 @@ export const getFirstLetterOfName = (
 
     return first + last || "U";
 };
+
+
+export const logoutUser = (router: any) => {
+    clearAllTypesOfStorage();
+    router.push("/")
+}

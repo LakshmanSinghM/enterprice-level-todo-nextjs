@@ -3,9 +3,9 @@ import { deleteCookie, getCookie, setCookie } from "cookies-next";
 export const clearAllCookies = () => {
     // clear all cookies
     const allCookies = document.cookie.split(";").map((c) => c.split("=")[0].trim());
-    // allCookies.forEach((name) => {
-    //     deleteCookie(name, { path: "/" });
-    // });
+    allCookies.forEach((name) => {
+        deleteCookie(name, { path: "/" });
+    });
 };
 
 export const clearLocalStorage = () => {
@@ -17,7 +17,7 @@ export const clearSessionStorage = () => {
 }
 
 export const clearAllStorage = () => {
-    clearAllCookies();
+    // clearAllCookies();
     localStorage.clear();
     clearSessionStorage();
 }
@@ -105,9 +105,18 @@ export const clearChache = async () => {
     }
 }
 
+export const logoutUserFromStorages = async () => {
+    clearAllStorage();
+    deleteCookieByKey("authToken");
+    deleteCookieByKey("refreshToken");
+}
+
 
 export const clearAllTypesOfStorage = async () => {
-    clearAllStorage();
-    clearChache();
-    clearIndexDB();
+    // clearAllStorage();
+    // clearChache();
+    // clearIndexDB();
+    // clearAllCookies();
+    // clearAllStorage();
+    logoutUserFromStorages();
 };

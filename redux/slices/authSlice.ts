@@ -4,7 +4,7 @@ import { FailureResponsePaylod } from "@/types/baseTypes";
 
 
 interface AuthState {
-    user: User | null;
+    user: User | null; // need to remove this from here as we will use the user slice to get user related info and all
     authLoading: boolean;
     authError: string | null;
     authMessage: string | null;

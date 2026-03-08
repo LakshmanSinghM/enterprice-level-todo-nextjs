@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { HelpCircle, LogOut, Moon, Settings, Sun, User } from "lucide-react"
+import { HelpCircle, ListTodo, LogOut, Moon, Settings, Sun, User } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import {
@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useAuth } from "@/hooks/useAuth"
-import { getFirstLetterOfName } from "@/utils/user-util/userHelper"
+import { getFirstLetterOfName, logoutUser } from "@/utils/user-util/userHelper"
+import { useRouter } from "next/navigation"
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false);
     const { user, authLoading } = useAuth();
+    const router = useRouter();
 
     console.log("User ", user)
 
@@ -35,7 +37,7 @@ const Header = () => {
                 <Button
                     variant="link"
                     size="sm"
-                    className="rounded-md shadow"
+                    className="rounded-md"
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                     suppressHydrationWarning>
 
@@ -56,11 +58,12 @@ const Header = () => {
                             variant="ghost"
                         >
                             {
+                                // inclip loader here
                                 authLoading ? <p>loding</p> :
                                     <Avatar>
                                         <AvatarImage
-                                            alt=""
-                                            src=""
+                                            alt={user?.email}
+                                            src={user?.profileImage ?? ""}
                                         />
                                         <AvatarFallback>
                                             {getFirstLetterOfName(user?.firstName, user?.lastName)}
@@ -72,8 +75,8 @@ const Header = () => {
                     <DropdownMenuContent align="end" className="w-56">
                         <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                                <p className="font-medium text-sm leading-none">Hayden Bleasel</p>
-                                <p className="text-muted-foreground text-xs leading-none">hello@haydenbleasel.com</p>
+                                <p className="font-medium text-sm leading-none">{user?.firstName} {user?.lastName}</p>
+                                <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
@@ -86,11 +89,13 @@ const Header = () => {
                             Settings
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                            <HelpCircle />
-                            Help
+                            <ListTodo />
+                            Todos
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive">
+                        <DropdownMenuItem variant="destructive"
+                            onClick={() => { logoutUser(router) }}
+                        >
                             <LogOut />
                             Log out
                         </DropdownMenuItem>

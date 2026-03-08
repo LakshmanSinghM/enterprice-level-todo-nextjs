@@ -11,10 +11,9 @@ const UserHome = () => {
 
     return (
         <div className="flex flex-col gap-6 min-h-screen items-center justify-center dark:bg-gray-900">
-            <h1>Hello welcome </h1>
+            <h1 className='text-xl flex justify-center p-4'>Hello welcome to the todos dashboard  with metrices</h1>
         </div>
     )
 }
 
 export default UserHome
-

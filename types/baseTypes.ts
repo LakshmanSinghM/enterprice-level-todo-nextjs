@@ -60,3 +60,7 @@ export type FailureResponsePaylod = {
     errors?: Record<string, any>;
     status?: number;
 }
+
+export type SimpleRequestWithMeta = {
+    reqMeta?: Record<string, string>;
+}
