@@ -16,18 +16,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useAuth } from "@/hooks/useAuth"
 import { getFirstLetterOfName, logoutUser } from "@/utils/user-util/userHelper"
 import { useRouter } from "next/navigation"
+import { useCurrentUser } from "@/hooks/useUser"
 
 const Header = () => {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false);
-    const { user, authLoading } = useAuth();
     const router = useRouter();
+    const { fetchCurrentUserData, userLoading, userMessage, userError, user: currentUser } = useCurrentUser();
 
-    console.log("User ", user)
+
+    console.log("User ", currentUser)
 
     // Only render theme-dependent UI after mounting on the client
     useEffect(() => {
-        setMounted(true)
+        setMounted(true);
+        if (!currentUser) {
+            fetchCurrentUserData();
+        }
     }, [])
 
     return (
@@ -59,14 +64,14 @@ const Header = () => {
                         >
                             {
                                 // inclip loader here
-                                authLoading ? <p>loding</p> :
+                                userLoading ? <p>loding</p> :
                                     <Avatar>
                                         <AvatarImage
-                                            alt={user?.email}
-                                            src={user?.profileImage ?? ""}
+                                            alt={currentUser?.email}
+                                            src={currentUser?.profileImage ?? ""}
                                         />
                                         <AvatarFallback>
-                                            {getFirstLetterOfName(user?.firstName, user?.lastName)}
+                                            {getFirstLetterOfName(currentUser?.firstName, currentUser?.lastName)}
                                         </AvatarFallback>
                                     </Avatar>
                             }
@@ -75,8 +80,8 @@ const Header = () => {
                     <DropdownMenuContent align="end" className="w-56">
                         <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                                <p className="font-medium text-sm leading-none">{user?.firstName} {user?.lastName}</p>
-                                <p className="text-muted-foreground text-xs leading-none">{user?.email}</p>
+                                <p className="font-medium text-sm leading-none">{currentUser?.firstName} {currentUser?.lastName}</p>
+                                <p className="text-muted-foreground text-xs leading-none">{currentUser?.email}</p>
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />

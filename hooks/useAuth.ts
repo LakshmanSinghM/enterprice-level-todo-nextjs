@@ -18,7 +18,7 @@ import {
 
 export function useAuth() {
     const dispatch = useAppDispatch()
-    const { authLoading, authError, authMessage, loggedIn, reqMeta, errors, user } = useAuthSelector()
+    const { authLoading, authError, authMessage, loggedIn, reqMeta, errors } = useAuthSelector()
 
     //  REGISTER 
     const register = (payload: UserAuthRequestPayload) => {
@@ -48,9 +48,7 @@ export function useAuth() {
         authError,
         errors,
         authMessage,
-        loggedIn,
-        user,
-
+        loggedIn, 
         // actions
         register,
         googleLogin,

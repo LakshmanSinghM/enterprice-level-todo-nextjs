@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
 const UserHome = () => {
-    const { loggedIn, user, authLoading, authError } = useAuth();
+    const { loggedIn, authLoading, authError } = useAuth();
     const router = useRouter();
 
     if (!loggedIn) router.push("/");

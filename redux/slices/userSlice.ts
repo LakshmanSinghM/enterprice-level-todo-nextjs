@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/userAndAuthTypes";
 import { FailureResponsePaylod, SimpleRequestWithMeta, SuccessResponsePaylod } from "@/types/baseTypes";
+import { registerSuccess } from "./authSlice";
 
 
 interface UserState {
@@ -76,9 +77,11 @@ const userSlice = createSlice({
         // },
     },
 
-    /* ================= EXTRA REDUCERS ================= */
-
     extraReducers: (builder) => {
+        builder.addCase(registerSuccess, (state, action) => {
+            state.user = action.payload.data?.user ?? null;
+            state.userLoading = false;
+        });
 
         // // When logout happens → clear user
         // builder.addCase(logout, (state) => {

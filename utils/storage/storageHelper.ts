@@ -68,7 +68,7 @@ export const setRefreshToken = (token: string) => {
         maxAge,
         path: "/",
         secure: process.env.NEXT_PUBLIC_NODE_ENV == "prod",
-        sameSite: "strict",
+        sameSite: "none",
     });
     setLocalStorageItem("refreshToken", token);
 };

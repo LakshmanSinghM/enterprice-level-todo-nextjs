@@ -4,7 +4,6 @@ import { FailureResponsePaylod } from "@/types/baseTypes";
 
 
 interface AuthState {
-    user: User | null; // need to remove this from here as we will use the user slice to get user related info and all
     authLoading: boolean;
     authError: string | null;
     authMessage: string | null;
@@ -14,7 +13,6 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-    user: null,
     authLoading: false,
     authError: null,
     authMessage: null,
@@ -52,7 +50,7 @@ const authSlice = createSlice({
         registerSuccess(state, action: PayloadAction<UserAuthSuccessResponsePaylod>) {
             console.log("Succes are coming in slice " + JSON.stringify(action.payload))
             state.authLoading = false;
-            state.user = action.payload.data?.user;
+            // state.user = action.payload.data?.user;
             state.authMessage = action.payload.message ?? null;
             state.reqMeta = action.payload.meta;
             state.loggedIn = true;
